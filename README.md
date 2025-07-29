@@ -47,9 +47,6 @@ app/
 │   │   └── UserController.php
 │   └── Requests/
 │       └── UserRequest.php
-├── Traits/
-│   └── ApiResponder.php
-
 resources/
 ├── views/
 │   ├── admin/
