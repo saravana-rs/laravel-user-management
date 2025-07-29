@@ -17,18 +17,7 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
-    if ($request->ajax()) {
-        $users = User::where('role', '!=', 'admin');
-        return DataTables::of($users)
-            ->addColumn('action', function ($user) {
-                return view('admin.partials.actions', compact('user'))->render();
-            })
-            ->make(true);
-    }
-
-    // This line is missing in your error:
-    $users = User::where('role', '!=', 'admin')->get(); // 👈 Add this
-
+    $users = User::where('role', '!=', 'admin')->get(); 
     return view('admin.dashboard', compact('users'));
     }
 
@@ -85,13 +74,13 @@ class AdminController extends Controller
       
           $user->save();
 
-        return redirect()->route('admin.index')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Profile updated successfully.');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.index')->with('success', 'User deleted.');
+        return redirect()->route('admin.dashboard')->with('success', 'User deleted.');
     }
 }

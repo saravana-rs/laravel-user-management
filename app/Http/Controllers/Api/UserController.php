@@ -12,17 +12,16 @@ class UserController extends Controller
 {
   public function show($user_id)
 {
-    // Rate limiting
-    if (RateLimiter::tooManyAttempts('api-user:' . request()->ip(), 60)) {
-        return Response::json([
-            'status_code' => 429,
-            'message' => 'Too many requests',
-        ], 429);
-    }
+    // // Rate limiting
+    // if (RateLimiter::tooManyAttempts('api-user:' . request()->ip(), 60)) {
+    //     return Response::json([
+    //         'status_code' => 429,
+    //         'message' => 'Too many requests',
+    //     ], 429);
+    // }
 
-    RateLimiter::hit('api-user:' . request()->ip());
+    // RateLimiter::hit('api-user:' . request()->ip());
 
-    // Get user by ID without authentication
     $user = User::find($user_id);
 
     if (!$user) {
@@ -32,11 +31,16 @@ class UserController extends Controller
         ], 404);
     }
 
-    // Decode addresses
     $address1 = json_decode($user->address1, true);
     $address2 = !empty($user->address2) ? json_decode($user->address2, true) : null;
 
     $addresses = [];
+
+
+    unset($address1['primary']);
+    if ($address2) {
+        unset($address2['primary']);
+    }
 
     if ($address1) {
         $addresses[] = [
